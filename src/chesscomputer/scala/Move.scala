@@ -1,10 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package chesscomputer.scala
 
+/*
+ * Diese Klasse kapselt einen Zug von (x,y) nach (x,y)
+ */
 class Move(fromx:Int,fromy:Int, tox:Int, toy : Int) {
     def getfromx : Int = fromx
     def getfromy : Int = fromy

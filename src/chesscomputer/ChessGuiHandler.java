@@ -20,11 +20,21 @@ public class ChessGuiHandler {
     private final ChessGUI gui;
     private GridLayout layout;
     private Container contentPane;
+    /**
+     * 
+     */
     public List<ChessLocationMapper> clm;
+    /**
+     * 
+     */
     public JPanel gridContainer;
     private ChessField chessField;
     private Boolean turn = false;
 
+    /**
+     * 
+     * @param aThis
+     */
     public ChessGuiHandler(ChessGUI aThis) {   
         this.gui = aThis;
         this.clm = new ArrayList<ChessLocationMapper>(64);
@@ -59,11 +69,16 @@ public class ChessGuiHandler {
         }
     }
 
+    /**
+     * 
+     * @throws IOException
+     * @throws Exception
+     */
     public void initializeBoard() throws IOException, Exception {
         chessField = new ChessField();
         chessField.initiate();
 
-        for (ChessPiece piece : chessField.chessModell.getListOfPieces()) {
+        for (ChessPiece piece : chessField.initiate()) {
             piece.location.transform07_18();
             initFigure(piece, piece.location, piece.color);
         }
@@ -73,7 +88,7 @@ public class ChessGuiHandler {
      * Fügt eine neue Figur auf das Brett und update auf das Mapping
      * @param chessPiece
      * @param chessLocation
-     * @param color
+     * @return 
      * @throws IOException
      * @throws Exception 
      */
@@ -86,18 +101,33 @@ public class ChessGuiHandler {
         return panel;
     }
 
+    /**
+     * 
+     * @param chessPiece
+     * @param chessLocation
+     * @param color
+     * @throws IOException
+     * @throws Exception
+     */
     public void initFigure(ChessPiece chessPiece, ChessLocation chessLocation, Color color) throws IOException, Exception {
         JPanel addFigure = addFigure(chessPiece, chessLocation);
         ChessLocationMapper mapper = getLocationMapping(chessLocation);
         mapper.setChessPiece(chessPiece);
     }
 
+    /**
+     * 
+     * @param chessLocation
+     */
     public void removeFigure(ChessLocation chessLocation) {
         JPanel panel = ((JPanel) this.gridContainer.getComponent(ChessLocation.transform(chessLocation.point.x, chessLocation.point.y)));
         panel.removeAll();
         validate();
     }
 
+    /**
+     * 
+     */
     public void validate() {
         this.gui.repaint();
         this.gui.validate();
@@ -139,6 +169,11 @@ public class ChessGuiHandler {
         throw new Exception("did not find Panel with given Koordinate");
     }
 
+    /**
+     * 
+     * @param location
+     * @throws Exception
+     */
     public void removeLocationMapping(ChessLocation location) throws Exception {
         int count = 0;
         int resultCount = -1;
@@ -153,6 +188,9 @@ public class ChessGuiHandler {
         }
     }
 
+    /**
+     * 
+     */
     public void printAllMappings() {
         for (ChessLocationMapper mapping : clm) {
             String className;

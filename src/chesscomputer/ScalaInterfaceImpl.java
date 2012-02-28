@@ -8,8 +8,6 @@ import java.awt.Color;
 import java.awt.HeadlessException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,6 +21,10 @@ public class ScalaInterfaceImpl implements ScalaInterface {
     private Boolean started;
     private Color color = Color.BLACK;
 
+    /**
+     * 
+     * @return
+     */
     @Override
     public List<Quadrupel> getStellung() {
         testStarted();
@@ -35,6 +37,13 @@ public class ScalaInterfaceImpl implements ScalaInterface {
         return result;
     }
 
+    /**
+     * 
+     * @param fromX
+     * @param fromY
+     * @param toX
+     * @param toY
+     */
     @Override
     public void move(int fromX, int fromY, int toX, int toY) {
         testStarted();
@@ -45,12 +54,19 @@ public class ScalaInterfaceImpl implements ScalaInterface {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     @Override
     public Boolean getTurn() {
         testStarted();
         return gui.viewmodell.getTurn();
     }
 
+    /**
+     * 
+     */
     @Override
     public void startGame() {
         try {
@@ -63,6 +79,10 @@ public class ScalaInterfaceImpl implements ScalaInterface {
         }
     }
 
+    /**
+     * 
+     * @param color
+     */
     @Override
     public void setPlayerColor(Color color) {
         this.color = color;
@@ -74,6 +94,10 @@ public class ScalaInterfaceImpl implements ScalaInterface {
         }
     }
 
+    /**
+     * 
+     * @param bool
+     */
     public void setTurn(Boolean bool) {
         this.gui.viewmodell.setTurn(bool);
     }

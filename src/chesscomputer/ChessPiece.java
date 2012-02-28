@@ -1,7 +1,6 @@
 package chesscomputer;
 
 import java.awt.Color;
-import java.util.UUID;
 
 /**
  *
@@ -9,25 +8,36 @@ import java.util.UUID;
  * Dieser Code ist stets buggy und sollte nicht als für irgendwas benutzt werden,
  * was boooooom machen kann.
  */
-public abstract class ChessPiece implements IChessPiece {
+public abstract class ChessPiece {
 
-    public  ChessLocation location;
-    private ChessField chessField;
-    private UUID id;
+    /**
+     * 
+     */
+    public ChessLocation location;
     Color color;
 
+    /**
+     * Konstruktor: Eine Schachfigur sollte eine Farbe haben und einen Platz
+     * auf dem Brett
+     * @param location
+     * @param chessField
+     * @param color
+     * @throws ColorInvalidException 
+     */
     public ChessPiece(ChessLocation location, ChessField chessField, Color color) throws ColorInvalidException {
         this.location = location;
-        this.chessField = chessField;
-        this.id = new UUID(0, 64);
         if (color != Color.black && color != Color.white) {
             throw new ColorInvalidException();
         }
         this.color = color;
     }
 
+    /**
+     * 
+     * @param color
+     * @throws ColorInvalidException
+     */
     public ChessPiece(Color color) throws ColorInvalidException {
-        this.id = new UUID(0, 64);
         if (color != Color.black && color != Color.white) {
             throw new ColorInvalidException();
         }
@@ -35,6 +45,9 @@ public abstract class ChessPiece implements IChessPiece {
 
     }
 
-    protected abstract void move();
+    /**
+     * Ordnet der Figur einen eindeutigen Namen zu, der in Scala verwendet werden kann
+     * @return 
+     */
     protected abstract String getName();
 }

@@ -27,61 +27,57 @@ class ChessComputerTester {
   
   def test1(gui : ScalaInterfaceImpl, color:Color): Boolean= {
     System.out.println("TestJavaToScala")      
-    var converter = new JavaToScala
-    printPositions(converter.convertStellung(gui.getStellung))
+    printPositions(JavaToScala.convertStellung(gui.getStellung))
     true
   } 
   
   def testBishopCalc(gui : ScalaInterfaceImpl, color:Color) {
     System.out.println("TestLinearCalc")
     gui.move(4, 7, 4, 5)
-    var logic = new ChessComputerLogic(gui,color)    
+    var logic = new ChessComputerMoveCalculator(JavaToScala.convertStellung(gui.getStellung),color)    
     printMoves(logic.calcBishop(3, 8),"Läufer")
     //erwartet Züge > nil
   }
   def testLinearCalc(gui : ScalaInterfaceImpl, color:Color) {
     System.out.println("TestLinearCalc")
     gui.move(4, 7, 4, 5)
-    var logic = new ChessComputerLogic(gui,color)    
+    var logic = new ChessComputerMoveCalculator(JavaToScala.convertStellung(gui.getStellung),color)    
     printMoves(logic.calcLinear(3, 8, 3, 8, logic.add1, logic.minus1),"Läufer")
   }
   
   def testExistsOwn(gui: ScalaInterfaceImpl, color: Color) {
     System.out.println("TestLinearCalc")
     gui.move(4, 7, 4, 5)
-    var logic = new ChessComputerLogic(gui,color)
+    var logic = new ChessComputerMoveCalculator(JavaToScala.convertStellung(gui.getStellung),color)
     System.out.println("Es existiert eine Figur auf 4,7"+ logic.existsOwn(4, 7))
   }
   
   
   def testKingCalc(gui : ScalaInterfaceImpl, color:Color) {
     System.out.println("TestKingCalc")
-    var logic = new ChessComputerLogic(gui,color)
+    var logic = new ChessComputerMoveCalculator(JavaToScala.convertStellung(gui.getStellung),color)
     printMoves(logic.calcKing(3, 6),"King")
   }
   
   def testPawnCalc(gui : ScalaInterfaceImpl, color:Color) {
     System.out.println("TestPawnCalc")
-    var logic = new ChessComputerLogic(gui,color)
+    var logic = new ChessComputerMoveCalculator(JavaToScala.convertStellung(gui.getStellung),color)
     printMoves(logic.calcPawn(3, 3),"Pawn")
   }
   
   def testFilterBlack(gui : ScalaInterfaceImpl, color:Color)  {
     System.out.println("TestFilterBlack")
-    var logic = new ChessComputerLogic(gui,color)
-    var converter = new JavaToScala
-    var positions = converter.convertStellung(gui.getStellung)
-    printPositions(positions.filter(logic.isComputerColor))
+    var logic = new ChessComputerMoveCalculator(JavaToScala.convertStellung(gui.getStellung),color)
+    var positions = JavaToScala.convertStellung(gui.getStellung)
+    printPositions(positions.filter(FilterNXYC.isComputerColor))
       
   }
   
   def testCalculateAllMoves(gui:ScalaInterfaceImpl,color:Color) {
     System.out.println("Testcalculateall")
     gui.move(4, 7, 4, 5)
-    var logic = new ChessComputerLogic(gui,color)
-    var converter = new JavaToScala
-    var positions = converter.convertStellung(gui.getStellung)
-    printMoves(logic.calculateAllComputerMoves(positions), "Zug: ")
+    var logic = new ChessComputerMoveCalculator(JavaToScala.convertStellung(gui.getStellung),color)   
+    printMoves(logic.calculateAllComputerMoves(), "Zug: ")
       
     
     

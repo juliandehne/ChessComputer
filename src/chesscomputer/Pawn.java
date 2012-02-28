@@ -10,27 +10,20 @@ import java.awt.Color;
  */
 public class Pawn extends ChessPiece {
 
+    /**
+     * 
+     * @param location
+     * @param chessField
+     * @param color
+     * @throws ColorInvalidException
+     */
     public Pawn(ChessLocation location, ChessField chessField, Color color) throws ColorInvalidException  {
          super(location,chessField,color);
     }
      Pawn(Color white) throws ColorInvalidException {
         super(white);
     }
-    @Override
-    protected void move() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void move(ChessLocation location) throws IllegalMoveException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void move(ChessLocation location, ChessPiece newPiece) throws IllegalMoveException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
+     
     @Override
     protected String getName() {
         return "Bauer";

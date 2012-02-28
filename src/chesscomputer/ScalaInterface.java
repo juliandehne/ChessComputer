@@ -12,10 +12,37 @@ import java.util.List;
  * @author Julian
  */
 public interface ScalaInterface {  
+    /** 
+     * startet das Spiel
+     */
     void startGame();
-    List<Quadrupel> getStellung(); //Name der Figur, x Koordinate y Koodinate als int
+   
+    /**
+     * @return
+     */
+    List<Quadrupel> getStellung(); 
+    /**
+     * 
+     * Name der Figur, x Koordinate y Koodinate als int
+     * @param fromX
+     * @param fromY
+     * @param toX
+     * @param toY
+     */
     void move(int fromX, int fromY, int toX, int toY);
-    Boolean getTurn(); //if true computer has to move
+    /**
+     * 
+     * @return
+     */
+    Boolean getTurn(); 
+    /**
+     * true computer has to move
+     * @param bool
+     */
     void setTurn(Boolean bool);
+    /**
+     * utility function
+     * @param color
+     */
     void setPlayerColor(Color color);    
 }

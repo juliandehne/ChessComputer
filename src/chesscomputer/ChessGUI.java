@@ -10,8 +10,16 @@ import javax.swing.JFrame;
  */
 public class ChessGUI extends JFrame {
 
+    /**
+     * 
+     */
     public final ChessGuiHandler viewmodell;
 
+    /**
+     * 
+     * @throws HeadlessException
+     * @throws Exception
+     */
     public ChessGUI() throws HeadlessException, Exception {
         this.viewmodell = new ChessGuiHandler(this);
         this.viewmodell.paintBoard();
@@ -19,6 +27,12 @@ public class ChessGUI extends JFrame {
         this.setVisible(true);
     }
 
+    /**
+     * 
+     * @param args
+     * @throws HeadlessException
+     * @throws Exception
+     */
     public static void main(String[] args) throws HeadlessException, Exception {
         ChessGUI cgui = new ChessGUI();   
         cgui.viewmodell.initializeBoard();

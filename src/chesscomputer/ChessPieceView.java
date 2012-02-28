@@ -15,8 +15,17 @@ import javax.swing.JLabel;
  */
 public class ChessPieceView extends JLabel {
 
+    /**
+     * 
+     */
     public ImageIcon icon;
 
+    /**
+     * 
+     * @param cp
+     * @throws IOException
+     * @throws Exception
+     */
     public ChessPieceView(ChessPiece cp) throws IOException, Exception {
 
         if (cp.getClass().getCanonicalName().equals(Bishop.class.getCanonicalName())
@@ -64,7 +73,11 @@ public class ChessPieceView extends JLabel {
         setIcon(icon);
     }
 
-    /** Returns an ImageIcon, or null if the path was invalid. */
+    /** Returns an ImageIcon, or null if the path was invalid.
+     * @param path 
+     * @param description
+     * @return  
+     */
     protected ImageIcon createImageIcon(String path,
             String description) {
         java.net.URL imgURL = getClass().getResource(path);

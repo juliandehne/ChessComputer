@@ -14,6 +14,13 @@ public class ChessDiagonal {
     List<ChessField> southWestDiagonal;
     List<ChessField> southEastDiagonal;
 
+    /**
+     * 
+     * @param northEastDiagonal
+     * @param northWestDiagonal
+     * @param southWestDiagonal
+     * @param southEastDiagonal
+     */
     public ChessDiagonal(List<ChessField> northEastDiagonal, List<ChessField> northWestDiagonal, List<ChessField> southWestDiagonal, List<ChessField> southEastDiagonal) {
         this.northEastDiagonal = northEastDiagonal;
         this.northWestDiagonal = northWestDiagonal;

@@ -10,11 +10,22 @@ public class ChessLocationInLetters extends ChessLocation {
 
     String letter;
 
+    /**
+     * Diese Klasse ist in der Lage, die Zahlen auf die im Schach üblichen Buchstaben abzubilden
+     * @param x
+     * @param y
+     * @throws Exception
+     */
     public ChessLocationInLetters(int x, int y) throws Exception {
         super(x, y);
         this.letter = getLetter18(x);
     }
-
+    
+    /**
+     * map x-Koordinate auf literalen Bezeichner
+     * @param x
+     * @return 
+     */
     private String getLetter18(int x) {
         switch (x) {
             case 1:

@@ -8,7 +8,8 @@ package chesscomputer.scala
 import chesscomputer.Quadrupel
 import java.awt.Color
 
-class JavaToScala {
+object JavaToScala {
+  /**convertiert die Liste mit den Figuren in einer Scalaliste*/
   def convertStellung(list1 :java.util.List[Quadrupel]):List[(java.lang.String,Int,Int,Color)]= {
     if (list1.isEmpty) {
       List.empty[(String,Int,Int,Color)] //todo

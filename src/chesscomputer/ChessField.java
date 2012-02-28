@@ -13,14 +13,15 @@ import java.util.logging.Logger;
  * Dieser Code ist stets buggy und sollte nicht als für irgendwas benutzt werden,
  * was boooooom machen kann.
  */
-public class ChessField implements IChessField {
-
-    public chesscomputer.ChessModell chessModell;
-
-    @Override
-    public void initiate() {
+public class ChessField  {
+         
+    /**
+     * 
+     * @return
+     */
+    public  List<ChessPiece> initiate() {
         try {
-            List<ChessPiece> listOfPieces = new ArrayList<ChessPiece>();
+             List<ChessPiece> listOfPieces = new ArrayList<ChessPiece>();
             //weiße Bauern
             Color white = Color.white;
             ChessLocation chessLocation01 = new ChessLocation(0, 1, false);
@@ -92,33 +93,15 @@ public class ChessField implements IChessField {
             listOfPieces.add(new King(chessLocation47, this, black));
             listOfPieces.add(new Bishop(chessLocation57, this, black));
             listOfPieces.add(new Knight(chessLocation67, this, black));
-            listOfPieces.add(new Tower(chessLocation77, this, black));
-
-            this.chessModell = new ChessModell(listOfPieces);
+            listOfPieces.add(new Tower(chessLocation77, this, black));   
+            
+            return listOfPieces;
 
         } catch (Exception ex) {
             Logger.getLogger(ChessField.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        return null;
 
-    }
-
-    @Override
-    public List<ChessDiagonal> getDiagonals(ChessLocation chessLocation) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<ChessVertical> getVertical(ChessLocation chessLocation) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Boolean isEmptyChessField(ChessLocation cL) {
-        return (this.chessModell.getPieceAtLocation(cL) == null);
-    }
-
-    @Override
-    public Boolean isSchach(ChessLocation cl) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

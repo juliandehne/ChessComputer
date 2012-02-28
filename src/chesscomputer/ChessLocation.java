@@ -11,6 +11,9 @@ import java.util.Comparator;
  */
 public class ChessLocation implements Comparable<ChessLocation> {
 
+    /**
+     * 
+     */
     public Point point;
     /**
      * 1 2 3 4 5 6 7 8 (x)
@@ -36,10 +39,20 @@ public class ChessLocation implements Comparable<ChessLocation> {
         }
     }
 
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param noTest
+     * @throws Exception
+     */
     public ChessLocation(int x, int y, boolean noTest) throws Exception {
         this.point = new Point(x, y);
     }
 
+    /**
+     * 
+     */
     public void transform18_07() {
         if (this.point.x > 0) {
             this.point.x = this.point.x - 1;
@@ -49,11 +62,19 @@ public class ChessLocation implements Comparable<ChessLocation> {
         }
     }
 
+    /**
+     * 
+     */
     public void transform07_18() {
         this.point.x = this.point.x + 1;
         this.point.y = this.point.y + 1;
     }
 
+    /**
+     * 
+     * @param c1
+     * @return
+     */
     public Boolean isEqual(ChessLocation c1) {
         return (this.point.x == c1.point.x && this.point.y == c1.point.y);
     }
@@ -63,6 +84,12 @@ public class ChessLocation implements Comparable<ChessLocation> {
         return equals(o) ? 1 : -1;
     }
 
+    /**
+     * 
+     * @param x
+     * @param y
+     * @return
+     */
     public static int transform(int x, int y) {
         return (x - 1) + ((y - 1) * 8);
     }
