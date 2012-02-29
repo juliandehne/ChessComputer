@@ -27,13 +27,13 @@ object Main {
     }
     
     
-//    var tester = new ChessComputerTester
+    var tester = new ChessComputerTester
 //    tester.test1(gui, Color.black)
 //    tester.testKingCalc(gui, Color.black)
 //    tester.testPawnCalc(gui, Color.black)
 //    tester.testFilterBlack(gui, Color.black)
 //    tester.testLinearCalc(gui, Color.black)    
-//    tester.testCalculateAllMoves(gui,Color.black)
+    tester.testCalculateAllMoves(gui,Color.black)
 //    tester.testExistsOwn(gui, Color.black)
   }   
 

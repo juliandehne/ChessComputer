@@ -14,21 +14,31 @@ class ChessComputerMoveCalculator(cStellung: List[(String,Int,Int,Color)  ], col
   /*** 
    * berechnet alle möglichen Züge des Computers 
    */
-  def calculateAllComputerMoves(): List[Move] ={  
-    FilterNXYC color = color
-    var filteredList = cStellung.filter(FilterNXYC.isComputerColor)
-    (
-      filterAndCalculate(filteredList, FilterNXYC.filterKing, calcKing) :::
-      filterAndCalculate(filteredList, FilterNXYC.filterKnight, calcKnight) :::
-      filterAndCalculate(filteredList, FilterNXYC.filterQueen, calcQueen) :::
-      filterAndCalculate(filteredList, FilterNXYC.filterPawn, calcPawn) :::
-      filterAndCalculate(filteredList, FilterNXYC.filterBishop, calcBishop) :::
-      filterAndCalculate(filteredList, FilterNXYC.filterTower, calcTower)
+  def calculateAllComputerMoves(): List[Move] ={      
+    var filteredList = Util.filterWithParameter(cStellung,color,FilterNXYC.isComputerColor)    
+    
+ 
+    ((     
+      Util.mapWithParameter[Move,String](filterAndCalculate(filteredList, FilterNXYC.filterKing, calcKing),"König",mapName) :::
+      Util.mapWithParameter[Move,String](filterAndCalculate(filteredList, FilterNXYC.filterKnight, calcKnight),"Springer",mapName) :::
+      Util.mapWithParameter[Move,String](filterAndCalculate(filteredList, FilterNXYC.filterQueen, calcQueen),"Dame",mapName) :::
+      Util.mapWithParameter[Move,String](filterAndCalculate(filteredList, FilterNXYC.filterPawn, calcPawn),"Bauer",mapName) :::
+      Util.mapWithParameter[Move,String](filterAndCalculate(filteredList, FilterNXYC.filterBishop, calcBishop),"Läufer",mapName) :::
+      Util.mapWithParameter[Move,String](filterAndCalculate(filteredList, FilterNXYC.filterTower, calcTower),"Turm",mapName)
     )
     .filterNot(FilterMove.filterOriginEqualsDestination)
-    .filterNot(FilterMove.filterOutOfBounds)
-    
+    .filterNot(FilterMove.filterOutOfBounds))            
   }
+  
+  def calculateChessFreeMoves() : List[Move] = {
+    calculateAllComputerMoves.filter(filterNotSchach)
+  }
+  
+  def mapName( move: Move, name: String): Move = {
+    move.name= name
+    move    
+  } 
+ 
   
   /***
    * Hilfsfunktion, um generisch die Züge für Figuren berechnen, die linear ziehen
@@ -135,81 +145,126 @@ class ChessComputerMoveCalculator(cStellung: List[(String,Int,Int,Color)  ], col
    * nimmt eine Liste mit Koordinaten und ruft die entsprechende Zugberechungsfunktion für die Figurenart auf
    * Die Idee ist, dass die Zweiertupel auf die Parameter der Calcfunktionen gemappt werden 
    */ 
-   def createListOfCalcResults(koordinaten: List[(Int,Int)], p:(Int,Int) => List[Move] ) : List[Move]= {    
-      if (koordinaten.isEmpty) {
-        List.empty[Move]      
-      } else {
-        p(koordinaten.head._1,koordinaten.head._2):::createListOfCalcResults(koordinaten.drop(1),p)     
-      }
+  def createListOfCalcResults(koordinaten: List[(Int,Int)], p:(Int,Int) => List[Move] ) : List[Move]= {    
+    if (koordinaten.isEmpty) {
+      List.empty[Move]      
+    } else {
+      p(koordinaten.head._1,koordinaten.head._2):::createListOfCalcResults(koordinaten.drop(1),p)     
     }
+  }
   
-   /***
-    * nimmt eine Filterfunktion, mit der aus einer Liste von NXYC die entsprechenden Figuren samt ihrer Position herausgesucht werden
-    * auf diese Tupel wird dann die Hilfsfunktion createListOfCalcResults aufgerufen, die mit für diese Figuren die möglichen Züge berechnet
-    */
-   def filterAndCalculate(list:List[mytypeNXYC], filterer:(mytypeNXYC => Boolean), calculate: (Int,Int) => List[Move]) : List[Move] = {
-      var test = list.filter(filterer).map(cutName).map(cutColor).toList
-      createListOfCalcResults(test,calculate) 
-    }
+  /***
+   * nimmt eine Filterfunktion, mit der aus einer Liste von NXYC die entsprechenden Figuren samt ihrer Position herausgesucht werden
+   * auf diese Tupel wird dann die Hilfsfunktion createListOfCalcResults aufgerufen, die mit für diese Figuren die möglichen Züge berechnet
+   */
+  def filterAndCalculate(list:List[mytypeNXYC], filterer:(mytypeNXYC => Boolean), calculate: (Int,Int) => List[Move]) : List[Move] = {
+    var test = list.filter(filterer).map(cutName).map(cutColor).toList
+    createListOfCalcResults(test,calculate) 
+  }
    
-   /**diese Hilfsfunktion berechnet, ob eine Figur auf einem Feld x,y steht*/
-   def isSamePosition(elem:mytypeNXYC,x:Int,y:Int): Boolean = {
-      elem._2==x && elem._3==y
-    }
+  /**diese Hilfsfunktion berechnet, ob eine Figur auf einem Feld x,y steht*/
+  def isSamePosition(elem:mytypeNXYC,x:Int,y:Int): Boolean = {
+    elem._2==x && elem._3==y
+  }
    
-   /**schneidet aus einem NXYC den Namen (N) weg*/
-   def cutName(elem:mytypeNXYC) : (Int,Int,Color) ={
-      (elem._2,elem._3,elem._4)
-    } 
+  /**schneidet aus einem NXYC den Namen (N) weg*/
+  def cutName(elem:mytypeNXYC) : (Int,Int,Color) ={
+    (elem._2,elem._3,elem._4)
+  } 
    
-   /**schneidet aus einem NXYC die Farbe (C) weg*/
-   def cutColor(elem:(Int,Int,Color)) : (Int,Int) ={
-      (elem._1,elem._2)
-    } 
+  /**schneidet aus einem NXYC die Farbe (C) weg*/
+  def cutColor(elem:(Int,Int,Color)) : (Int,Int) ={
+    (elem._1,elem._2)
+  } 
 
-   /**testet ob auf einem Feld x,y eine eigene Figur steht. Es besteht eine Abhängigkeit zu der Bekanntheit der Stellung*/
-   def existsOwn (x:Int,y:Int) : Boolean = {
-      var blacks = cStellung.filter(FilterNXYC.isComputerColor)
-      blacks.map(cutName).contains((x,y,color))    
-    }
+  /**testet ob auf einem Feld x,y eine eigene Figur steht. Es besteht eine Abhängigkeit zu der Bekanntheit der Stellung*/
+  def existsOwn (x:Int,y:Int) : Boolean = {
+    var blacks = Util.filterWithParameter(cStellung,color,(FilterNXYC.isComputerColor))
+    blacks.map(cutName).contains((x,y,color))    
+  }
    
-   /**testet ob auf einem Feld x,y eine fremde Figur steht. Es besteht eine Abhängigkeit zu der Bekanntheit der Stellung*/
-   def existsOther(x:Int,y:Int) : Boolean = {
-      var blacks = cStellung.filter(FilterNXYC.isNotComputerColor)
-      if (color == Color.black) {
-        blacks.map(cutName).contains((x,y,Color.white))    
-      } else {
-        blacks.map(cutName).contains((x,y,Color.black))    
-      }
+  /**testet ob auf einem Feld x,y eine fremde Figur steht. Es besteht eine Abhängigkeit zu der Bekanntheit der Stellung*/
+  def existsOther(x:Int,y:Int) : Boolean = {
+    var blacks = Util.filterWithParameter(cStellung,color,(FilterNXYC.isNotComputerColor))    
+    if (color == Color.black) {
+      blacks.map(cutName).contains((x,y,Color.white))    
+    } else {
+      blacks.map(cutName).contains((x,y,Color.black))    
     }
+  }
    
-   /**
-    * testet, ob x, y noch im Feld sind
-    */
-   def notOutOfBounds(x:Int,y:Int) :Boolean = {
-      x>0 && x<9 && y>0 && y<9 
-    }
+  /**
+   * testet, ob x, y noch im Feld sind
+   */
+  def notOutOfBounds(x:Int,y:Int) :Boolean = {
+    x>0 && x<9 && y>0 && y<9 
+  }
   
-   /***
-    * filtered Züge danach, ob sie auf eine eigene Figur ziehen würden
-    * TODO: unabhängig machen, so dass es in FilterMove verschoben werden kann
-    */
-   def notMoveOnOwn(move: Move) : Boolean =  {
-      !existsOwn(move.gettox,move.gettoy)
+  /***
+   * filtered Züge danach, ob sie auf eine eigene Figur ziehen würden
+   * TODO: unabhängig machen, so dass es in FilterMove verschoben werden kann
+   */
+  def notMoveOnOwn(move: Move) : Boolean =  {
+    !existsOwn(move.gettox,move.gettoy)
+  }
+   
+  /***
+   * filtered Züge danach, ob sie auf eine fremde Figur ziehen würden
+   * TODO: unabhängig machen, so dass es in FilterMove verschoben werden kann
+   */
+  def notMoveOnOther(move: Move) : Boolean =  {
+    !existsOther(move.gettox,move.gettoy)
+  }  
+  
+
+  /**
+   * erstellt eine imaginäre Stellung
+   */
+  def createImaginaryStellung(stellung:List[mytypeNXYC], move:Move, color:Color) : List[mytypeNXYC] = {
+    (move.name,move.gettox,move.gettoy,color)::removeMoveOrigin(stellung,move)
+  }
+  
+  /**
+   * filtert Züge danach, ob danach Schach herrscht
+   */
+  def filterNotSchach(move:Move): Boolean = {   
+    var imaginaryStellung = createImaginaryStellung(cStellung,move,color)
+    var listKingPosition = Util.filterWithParameter(imaginaryStellung.filter(FilterNXYC.filterKing),color,FilterNXYC.isComputerColor)
+    var imaginaryPlayer = new ChessComputerMoveCalculator(imaginaryStellung,oppositecolor(color))
+    var imaginaryMoves = imaginaryPlayer.calculateAllComputerMoves
+    Util.filterWithParameter(imaginaryMoves,listKingPosition.head,FilterMove.filterDestinationEqualsPosition).isEmpty    
+  }
+  
+  
+  def mapMoveToPositions(move:Move): List[mytypeNXYC] ={
+    createImaginaryStellung(cStellung, move, color)
+  }
+ 
+  
+  def oppositecolor(c: Color) : Color = {
+    if (c == Color.black) {
+      Color.white 
+    } else {
+      Color.black
     }
+  }
+  
+  def removeMoveOrigin(list:List[mytypeNXYC], move:Move): List[mytypeNXYC] =  {
+    if (list.isEmpty) {
+      List.empty[mytypeNXYC]
+    } else if (list.head._2 == move.getfromx && list.head._3 == move.getfromy) {
+      removeMoveOrigin(list.drop(1),move)
+    } else {
+      List.apply(list.head):::removeMoveOrigin(list.drop(1),move)
+    }
+  }
+ 
+
    
-   /***
-    * filtered Züge danach, ob sie auf eine fremde Figur ziehen würden
-    * TODO: unabhängig machen, so dass es in FilterMove verschoben werden kann
-    */
-   def notMoveOnOther(move: Move) : Boolean =  {
-      !existsOther(move.gettox,move.gettoy)
-    }  
-   
-   /** ohne Kommentar*/
-   def add1(x:Int) : Int = {x+1}
-   /** ohne Kommentar*/
-   def minus1(x:Int) : Int = {x-1}
-   /** ohne Kommentar*/
-   def id(x:Int) : Int = {x}
-   }
+  /** ohne Kommentar*/
+  def add1(x:Int) : Int = {x+1}
+  /** ohne Kommentar*/
+  def minus1(x:Int) : Int = {x-1}
+  /** ohne Kommentar*/
+  def id(x:Int) : Int = {x}
+}

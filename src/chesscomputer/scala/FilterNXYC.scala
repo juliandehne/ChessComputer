@@ -14,8 +14,7 @@ import java.awt.Color
 object FilterNXYC  {
   /**dieser Typ kodiert das Schachfeld als Figur, X-Koordinate, Y-Koordinate, Farbe der Figur*/
   type mytypeNXYC = (String,Int,Int,Color)   
-  var color = Color.black
-  
+   
   def filterKing(elem:mytypeNXYC) : Boolean = {
     (elem._1 == "König")
   }
@@ -33,14 +32,19 @@ object FilterNXYC  {
   }
   def filterBishop(elem:mytypeNXYC) : Boolean = {
     (elem._1 == "Läufer")
-  }
-  
-  def isComputerColor(elem:mytypeNXYC) : Boolean = {
+  }   
+   
+     
+  def isComputerColor(elem:mytypeNXYC, color: Color) : Boolean = {
     elem._4 == color
   }
-  def isNotComputerColor(elem:mytypeNXYC) : Boolean = {
-    !isComputerColor(elem)
+  def isNotComputerColor(elem:mytypeNXYC, color: Color) : Boolean = {
+    !isComputerColor(elem,color)
   }
+ 
+  
+ 
+  
   
   
 }

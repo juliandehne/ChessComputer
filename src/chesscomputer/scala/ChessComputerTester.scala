@@ -21,7 +21,7 @@ class ChessComputerTester {
     var moveIterator = moves.iterator
     while (moveIterator.hasNext) {
       var elem = moveIterator.next.asInstanceOf[Move]
-      System.out.println(label+": "+elem.getfromx+", "+elem.getfromy+", "+elem.gettox+", "+elem.gettoy);
+      System.out.println(label+ "Name der Figur "+elem.name+": "+elem.getfromx+", "+elem.getfromy+", "+elem.gettox+", "+elem.gettoy);
     }
   }
   
@@ -63,23 +63,19 @@ class ChessComputerTester {
     System.out.println("TestPawnCalc")
     var logic = new ChessComputerMoveCalculator(JavaToScala.convertStellung(gui.getStellung),color)
     printMoves(logic.calcPawn(3, 3),"Pawn")
-  }
-  
-  def testFilterBlack(gui : ScalaInterfaceImpl, color:Color)  {
-    System.out.println("TestFilterBlack")
-    var logic = new ChessComputerMoveCalculator(JavaToScala.convertStellung(gui.getStellung),color)
-    var positions = JavaToScala.convertStellung(gui.getStellung)
-    printPositions(positions.filter(FilterNXYC.isComputerColor))
-      
-  }
+  }   
   
   def testCalculateAllMoves(gui:ScalaInterfaceImpl,color:Color) {
-    System.out.println("Testcalculateall")
     gui.move(4, 7, 4, 5)
+    gui.move(6, 1, 2, 5)
     var logic = new ChessComputerMoveCalculator(JavaToScala.convertStellung(gui.getStellung),color)   
-    printMoves(logic.calculateAllComputerMoves(), "Zug: ")
-      
-    
-    
+    printMoves(logic.calculateChessFreeMoves(), "Zug: ")
   }
+  
+  def testsumValuesOfPieces(gui:ScalaInterfaceImpl,color:color) {
+    System.out.println("TestSumValues")
+    var kiLogic = new ChessComputerLogic(gui,color)
+    System.out.println(kiLogic.sumValuesOfPieces(kiLogic.cStellung))   
+  }
+  
 }
