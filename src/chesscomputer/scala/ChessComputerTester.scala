@@ -21,7 +21,7 @@ class ChessComputerTester {
     var moveIterator = moves.iterator
     while (moveIterator.hasNext) {
       var elem = moveIterator.next.asInstanceOf[Move]
-      System.out.println(label+ "Name der Figur "+elem.name+": "+elem.getfromx+", "+elem.getfromy+", "+elem.gettox+", "+elem.gettoy);
+      System.out.println(label+ "Name der Figur "+elem.getName+": "+elem.getfromx+", "+elem.getfromy+", "+elem.gettox+", "+elem.gettoy);
     }
   }
   
@@ -66,16 +66,24 @@ class ChessComputerTester {
   }   
   
   def testCalculateAllMoves(gui:ScalaInterfaceImpl,color:Color) {
-    gui.move(4, 7, 4, 5)
-    gui.move(6, 1, 2, 5)
-    var logic = new ChessComputerMoveCalculator(JavaToScala.convertStellung(gui.getStellung),color)   
-    printMoves(logic.calculateChessFreeMoves(), "Zug: ")
+    gui.move(4, 1, 4, 3)
+    gui.move(6, 1, 4, 7)
+    var cStellung = JavaToScala.convertStellung(gui.getStellung)
+    var logic = new ChessComputerMoveCalculator(cStellung,color)   
+    var move = new Move(5,8,4,7)
+    move.setName("König")
+    var imaginaryStellung = logic.createImaginaryStellung(cStellung, move,Color.black)
+    var listKingPosition = Util.filterWithParameter(imaginaryStellung.filter(FilterNXYC.filterKing),color,FilterNXYC.isComputerColor)    
+    var imaginaryMoves = logic.createImaginaryMoves(imaginaryStellung, Color.white)
+    printPositions(imaginaryStellung)
+    printMoves(logic.createImaginaryMoves(imaginaryStellung, Color.white), "Zug: ")
+    
   }
   
-  def testsumValuesOfPieces(gui:ScalaInterfaceImpl,color:color) {
-    System.out.println("TestSumValues")
-    var kiLogic = new ChessComputerLogic(gui,color)
-    System.out.println(kiLogic.sumValuesOfPieces(kiLogic.cStellung))   
-  }
+//  def testsumValuesOfPieces(gui:ScalaInterfaceImpl,color:color) {
+//    System.out.println("TestSumValues")
+//    var kiLogic = new ChessComputerLogic(gui,color)
+//    System.out.println(kiLogic.sumValuesOfPieces(kiLogic.cStellung))   
+//  }
   
 }

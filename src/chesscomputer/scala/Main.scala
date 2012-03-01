@@ -33,7 +33,7 @@ object Main {
 //    tester.testPawnCalc(gui, Color.black)
 //    tester.testFilterBlack(gui, Color.black)
 //    tester.testLinearCalc(gui, Color.black)    
-    tester.testCalculateAllMoves(gui,Color.black)
+//    tester.testCalculateAllMoves(gui,Color.black)
 //    tester.testExistsOwn(gui, Color.black)
   }   
 

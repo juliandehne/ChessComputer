@@ -221,7 +221,7 @@ class ChessComputerMoveCalculator(cStellung: List[(String,Int,Int,Color)  ], col
    * erstellt eine imaginäre Stellung
    */
   def createImaginaryStellung(stellung:List[mytypeNXYC], move:Move, color:Color) : List[mytypeNXYC] = {
-    (move.name,move.gettox,move.gettoy,color)::removeMoveOrigin(stellung,move)
+    (move.getName,move.gettox,move.gettoy,color)::Util.filterWithParameter(stellung,move,FilterNXYC.filterMove)
   }
   
   /**
@@ -229,12 +229,15 @@ class ChessComputerMoveCalculator(cStellung: List[(String,Int,Int,Color)  ], col
    */
   def filterNotSchach(move:Move): Boolean = {   
     var imaginaryStellung = createImaginaryStellung(cStellung,move,color)
-    var listKingPosition = Util.filterWithParameter(imaginaryStellung.filter(FilterNXYC.filterKing),color,FilterNXYC.isComputerColor)
-    var imaginaryPlayer = new ChessComputerMoveCalculator(imaginaryStellung,oppositecolor(color))
-    var imaginaryMoves = imaginaryPlayer.calculateAllComputerMoves
+    var listKingPosition = Util.filterWithParameter(imaginaryStellung.filter(FilterNXYC.filterKing),color,FilterNXYC.isComputerColor)    
+    var imaginaryMoves = createImaginaryMoves(imaginaryStellung, oppositecolor(color))
     Util.filterWithParameter(imaginaryMoves,listKingPosition.head,FilterMove.filterDestinationEqualsPosition).isEmpty    
   }
   
+  def createImaginaryMoves(imaginaryStellung:List[mytypeNXYC], color:Color) : List[Move] = {
+    var imaginaryPlayer = new ChessComputerMoveCalculator(imaginaryStellung,color)
+    imaginaryPlayer.calculateAllComputerMoves    
+  }
   
   def mapMoveToPositions(move:Move): List[mytypeNXYC] ={
     createImaginaryStellung(cStellung, move, color)
@@ -249,17 +252,6 @@ class ChessComputerMoveCalculator(cStellung: List[(String,Int,Int,Color)  ], col
     }
   }
   
-  def removeMoveOrigin(list:List[mytypeNXYC], move:Move): List[mytypeNXYC] =  {
-    if (list.isEmpty) {
-      List.empty[mytypeNXYC]
-    } else if (list.head._2 == move.getfromx && list.head._3 == move.getfromy) {
-      removeMoveOrigin(list.drop(1),move)
-    } else {
-      List.apply(list.head):::removeMoveOrigin(list.drop(1),move)
-    }
-  }
- 
-
    
   /** ohne Kommentar*/
   def add1(x:Int) : Int = {x+1}

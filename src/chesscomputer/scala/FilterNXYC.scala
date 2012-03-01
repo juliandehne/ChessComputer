@@ -42,6 +42,9 @@ object FilterNXYC  {
     !isComputerColor(elem,color)
   }
  
+  def filterMove(elem:mytypeNXYC, move:Move): Boolean =  {
+    !(elem._2 == move.getfromx && elem._3 == move.getfromy || elem._2 == move.gettox && elem._3 == move.gettoy )
+  }
   
  
   

@@ -1,4 +1,4 @@
-  /**
+/**
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -8,15 +8,16 @@ package chesscomputer.scala
 import chesscomputer.ScalaInterfaceImpl
 import java.awt.Color
 import java.lang.String
+
 import scala.util.Random
 
 class ChessComputerLogic(gui : ScalaInterfaceImpl, color:Color) {  
-
+  
   var cStellung = JavaToScala.convertStellung(gui.getStellung)
-    /**dieser Typ kodiert das Schachfeld als Figur, X-Koordinate, Y-Koordinate, Farbe der Figur*/
+  /**dieser Typ kodiert das Schachfeld als Figur, X-Koordinate, Y-Koordinate, Farbe der Figur*/
   type mytypeNXYC = (String,Int,Int,Color)    
   
-    /**führt einen Zug des Computers aus*/
+  /**führt einen Zug des Computers aus*/
   def move {    
     cStellung = JavaToScala.convertStellung(gui.getStellung)
     var computer = new ChessComputerMoveCalculator(cStellung,color)    
@@ -55,19 +56,49 @@ class ChessComputerLogic(gui : ScalaInterfaceImpl, color:Color) {
     list.filter(FilterNXYC.filterTower).size * 5 +
     list.filter(FilterNXYC.filterPawn).size +
     list.filter(FilterNXYC.filterKnight).size * 3 
-  }
+  }   
   
   def calculateBestMove(list: List[Move], stellung: List[mytypeNXYC], color: Color) : Move = {
     var stellung = JavaToScala.convertStellung(gui.getStellung)
     var computer = new ChessComputerMoveCalculator(stellung,color)    
     var moves = computer.calculateChessFreeMoves
-    //moves.map(computer.mapMoveToPositions)
-    //todo Positionen auf Zahlen mappen (value)
-    //sortieren
+    var listIndices = findIndexOfHighestDouble(moves.map(computer.mapMoveToPositions).map(sumValuesOfPieces).toList)
+    var listOfMovesTheorem1 = List.empty[Move]
+    listIndices.foreach(moves.take):: listOfMovesTheorem1
+    // Positionen auf Zahlen mappen (value)    
     //entsprechenden index bei moves raussuchen
-    //analog für Zugmöglichkeiten
+    //analog für Zugmöglichkeiten        
+    var listOfMovesTheorem2 = List.empty[Move]
+    var listIndices2 = (findIndexOfHighestDouble(moves.map(computer.mapMoveToPositions).map(mylength).toList))    
+    listIndices2.foreach(moves.take):: listOfMovesTheorem2
+    if (listOfMovesTheorem1.intersect(listOfMovesTheorem2).isEmpty) {
+      listOfMovesTheorem1.head
+    } 
+    else {
+      listOfMovesTheorem1.intersect(listOfMovesTheorem2).head
+    }    
     //Matt filtern (schach + keine Stellung, in der kein Schach ist möglich)
-    new Move(0,0,0,0)
+    //todo
+    
+  }
+  
+  def mylength (list: List[Any]) : Double = {
+    list.size
+  }
+  
+  def findIndexOfHighestDouble (list: List[Double]) : List[Int] ={
+    var result = 0.0
+    var count = 0
+    var resultIndices = List.empty[Int]
+    while (!list.isEmpty) {
+      if (list.head > result) {
+        result = list.head
+        count::resultIndices
+      }
+      count = count + 1
+      list.drop(1)
+    }
+    resultIndices
   }
       
 }
