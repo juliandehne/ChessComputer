@@ -81,7 +81,9 @@ class ChessComputerTester {
   }
   
   def calculateBestMove(gui:ScalaInterfaceImpl, color: Color)  {
-    gui.move(6, 1, 3, 6)
+    gui.move(4, 8, 6, 6)
+    gui.move(7, 8, 7, 4)
+    
     var stellung = JavaToScala.convertStellung(gui.getStellung)
     var logic = new ChessComputerLogic(gui, color)
     printMoves(logic.calculateBestMove(stellung, color),"Züge ")

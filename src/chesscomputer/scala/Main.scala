@@ -13,7 +13,7 @@ object Main {
     
     //erst einmal ein Spiel starten
     gui.startGame()      
-        
+   
 //    
 //    //Spielschleife: Der Computer zieht immer nur, wenn er an der Reihe ist        
     while (true) {  

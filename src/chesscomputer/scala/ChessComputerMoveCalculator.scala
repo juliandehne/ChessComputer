@@ -252,6 +252,11 @@ class ChessComputerMoveCalculator(cStellung: List[(String,Int,Int,Color)  ], col
     }
   }
   
+  def countNumberofPossibleMoves(list:List[mytypeNXYC],color:Color) : Double =  {
+      var computerdor = new ChessComputerMoveCalculator(list,color)
+      computerdor.calculateChessFreeMoves.size
+  }
+  
    
   /** ohne Kommentar*/
   def add1(x:Int) : Int = {x+1}
