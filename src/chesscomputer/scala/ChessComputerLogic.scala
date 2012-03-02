@@ -64,7 +64,10 @@ class ChessComputerLogic(gui : ScalaInterfaceImpl, color:Color) {
       (sumValuesOfPieces(list._1),list._2)
   }
     
-  def calculateBestMove(stellung: List[mytypeNXYC], color: Color) : List[Move] = {   
+  def calculateBestMove(stellung: List[mytypeNXYC], color: Color) : List[Move] = { 
+    if (positionIstMatt(stellung, color)) {
+      throw new Exception ("Matt!!!")
+    }
     var computer = new ChessComputerMoveCalculator(stellung,color)    
     var moves = computer.calculateChessFreeMoves
     
@@ -87,6 +90,14 @@ class ChessComputerLogic(gui : ScalaInterfaceImpl, color:Color) {
     //Matt filtern (schach + keine Stellung, in der kein Schach ist möglich)
     //todo
     
+  }
+  
+  def positionIstMatt(stellung: List[mytypeNXYC], color: Color) : Boolean = {
+    var computer = new ChessComputerMoveCalculator (stellung,color)
+    var listKingPosition = Util.filterWithParameter(stellung.filter(FilterNXYC.filterKing),color,FilterNXYC.isComputerColor)    
+    var imaginaryMoves = computer.createImaginaryMoves(stellung, computer.oppositecolor(color))
+    !(Util.filterWithParameter(imaginaryMoves,listKingPosition.head,FilterMove.filterDestinationEqualsPosition).isEmpty) &&
+    computer.calculateChessFreeMoves.isEmpty
   }
   
   def mylength (list: List[Any]) : Double = {
