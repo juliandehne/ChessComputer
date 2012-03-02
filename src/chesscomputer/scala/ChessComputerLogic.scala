@@ -20,9 +20,11 @@ class ChessComputerLogic(gui : ScalaInterfaceImpl, color:Color) {
   /**führt einen Zug des Computers aus*/
   def move {    
     cStellung = JavaToScala.convertStellung(gui.getStellung)
-    var computer = new ChessComputerMoveCalculator(cStellung,color)    
-    var moves = computer.calculateChessFreeMoves
-       
+    var moves = calculateBestMove(cStellung,color)
+//    
+//    Random Move::
+//    var computer = new ChessComputerMoveCalculator(cStellung,color)    
+//    var moves = computer.calculateChessFreeMoves       
     var size = moves.size
     if (size == 0) {
       System.out.println("kann nicht ziehen")
@@ -46,7 +48,7 @@ class ChessComputerLogic(gui : ScalaInterfaceImpl, color:Color) {
   def sumValuesOfPieces(list: List[mytypeNXYC]): Double = {
     var listOfOponentNXYC = Util.filterWithParameter(list,color,FilterNXYC.isComputerColor)
     sumValuesOfPiecesHelper(listOfOponentNXYC)-
-    sumValuesOfPiecesHelper(list.filter(listOfOponentNXYC.contains)
+    sumValuesOfPiecesHelper(list.filterNot(listOfOponentNXYC.contains)
     )            
   }
   
@@ -56,27 +58,32 @@ class ChessComputerLogic(gui : ScalaInterfaceImpl, color:Color) {
     list.filter(FilterNXYC.filterTower).size * 5 +
     list.filter(FilterNXYC.filterPawn).size +
     list.filter(FilterNXYC.filterKnight).size * 3 
-  }   
+  } 
   
-  def calculateBestMove(list: List[Move], stellung: List[mytypeNXYC], color: Color) : Move = {
-    var stellung = JavaToScala.convertStellung(gui.getStellung)
+  def mapValuesOfPieces (list: (List[mytypeNXYC],Move)) : (Double,Move) = {
+      (sumValuesOfPieces(list._1),list._2)
+  }
+    
+  def calculateBestMove(stellung: List[mytypeNXYC], color: Color) : List[Move] = {   
     var computer = new ChessComputerMoveCalculator(stellung,color)    
     var moves = computer.calculateChessFreeMoves
-    var listIndices = findIndexOfHighestDouble(moves.map(computer.mapMoveToPositions).map(sumValuesOfPieces).toList)
-    var listOfMovesTheorem1 = List.empty[Move]
-    listIndices.foreach(moves.take):: listOfMovesTheorem1
-    // Positionen auf Zahlen mappen (value)    
-    //entsprechenden index bei moves raussuchen
-    //analog für Zugmöglichkeiten        
-    var listOfMovesTheorem2 = List.empty[Move]
-    var listIndices2 = (findIndexOfHighestDouble(moves.map(computer.mapMoveToPositions).map(mylength).toList))    
-    listIndices2.foreach(moves.take):: listOfMovesTheorem2
-    if (listOfMovesTheorem1.intersect(listOfMovesTheorem2).isEmpty) {
-      listOfMovesTheorem1.head
-    } 
-    else {
-      listOfMovesTheorem1.intersect(listOfMovesTheorem2).head
-    }    
+    
+    var list1 = ((x:List[(Double,Move)]) => (x.takeWhile(_._1==x.head._1)))(moves.map(computer.mapMoveToPositions).map(mapValuesOfPieces).sortWith(_._1>_._1).toList)
+    var listOfMovesTheorem1 = list1.map(z => z._2).toList
+    listOfMovesTheorem1
+//    var list2 = ((x:List[(Double,Move)]) => (x.takeWhile(_._1==x.head._1)))(moves.map(computer.mapMoveToPositions).map(mapValuesOfPieces).sortWith(_._1>_._1).toList)
+//    var listOfMovesTheorem2 = list2.map(z => z._2).toList
+    
+    
+    
+    
+//    listIndices2.foreach(moves.take):: listOfMovesTheorem2
+//    if (listOfMovesTheorem1.intersect(listOfMovesTheorem2).isEmpty) {
+//      listOfMovesTheorem1.head      
+//    } 
+//    else {
+//      listOfMovesTheorem1.intersect(listOfMovesTheorem2).head
+//    }    
     //Matt filtern (schach + keine Stellung, in der kein Schach ist möglich)
     //todo
     
@@ -85,21 +92,7 @@ class ChessComputerLogic(gui : ScalaInterfaceImpl, color:Color) {
   def mylength (list: List[Any]) : Double = {
     list.size
   }
-  
-  def findIndexOfHighestDouble (list: List[Double]) : List[Int] ={
-    var result = 0.0
-    var count = 0
-    var resultIndices = List.empty[Int]
-    while (!list.isEmpty) {
-      if (list.head > result) {
-        result = list.head
-        count::resultIndices
-      }
-      count = count + 1
-      list.drop(1)
-    }
-    resultIndices
-  }
+    
       
 }
 

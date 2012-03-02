@@ -80,6 +80,22 @@ class ChessComputerTester {
     
   }
   
+  def calculateBestMove(gui:ScalaInterfaceImpl, color: Color)  {
+    gui.move(6, 1, 3, 6)
+    var stellung = JavaToScala.convertStellung(gui.getStellung)
+    var logic = new ChessComputerLogic(gui, color)
+    printMoves(logic.calculateBestMove(stellung, color),"Züge ")
+    
+  }
+  
+  def irgendwas (list:List[Int]) {    
+    var elem = list.map(addab(1))
+  }
+  
+  def addab (a: Int) (b: Int) : Int ={
+    a+b
+  }
+  
 //  def testsumValuesOfPieces(gui:ScalaInterfaceImpl,color:color) {
 //    System.out.println("TestSumValues")
 //    var kiLogic = new ChessComputerLogic(gui,color)

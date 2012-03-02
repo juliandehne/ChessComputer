@@ -239,8 +239,8 @@ class ChessComputerMoveCalculator(cStellung: List[(String,Int,Int,Color)  ], col
     imaginaryPlayer.calculateAllComputerMoves    
   }
   
-  def mapMoveToPositions(move:Move): List[mytypeNXYC] ={
-    createImaginaryStellung(cStellung, move, color)
+  def mapMoveToPositions(move:Move): (List[mytypeNXYC],Move) ={
+    (createImaginaryStellung(cStellung, move, color),move)
   }
  
   
