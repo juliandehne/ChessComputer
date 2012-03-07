@@ -112,47 +112,37 @@ class ChessComputerLogic(gui : ScalaInterfaceImpl, color:Color) {
     
   }
   
-  def calculateBestMoveN(stellung: List[mytypeNXYC], color: Color, originalColor: Color, tiefe:Int, originalStellung:List[mytypeNXYC], blackList:List[Move], originaltiefe:Int, rating:Int, bestMove : Move) : Move = {
-    if (stellung.filter(x=>FilterNXYC.isComputerColor(x,originalColor)).size == blackList.size) {
-      bestMove
-    }
-    var computer = new ChessComputerMoveCalculator(stellung,color)
-    var currentmove = computer.calculateChessFreeMoves().filterNot(blackList.contains).head
-    if (tiefe != 0 && tiefe % 2 != 1) {
-      var computer = new ChessComputerMoveCalculator(stellung, color)
-      var nextStellung = computer.createImaginaryStellung(stellung,currentmove,color)
-      var currentRating = rate(nextStellung, color)
-      if (currentRating > rating) {          
-        calculateBestMoveN(nextStellung,computer.oppositecolor(color), originalColor,originaltiefe, originalStellung,currentmove::blackList,originaltiefe, currentRating, currentmove)          
-      }  else {
-        calculateBestMoveN(nextStellung,computer.oppositecolor(color),originalColor,originaltiefe, originalStellung,currentmove::blackList,originaltiefe, rating, bestMove)                   
-      }
-    } else {
-      calculateBestMoveN(stellung, color, originalColor, tiefe -1, originalStellung, blackList, originaltiefe, rating, bestMove)
-    }
-  }
-  
-  def rate(stellung: List[mytypeNXYC], color: Color): Int = {
-    var moves = calculateBestMove(stellung,color)
-    var computer = new ChessComputerMoveCalculator(stellung, color)
-    var listOfMovesTheorem3Rating = (moves.map(computer.mapMoveToPositions).filter(x => positionIstMatt(x._1, computer.oppositecolor(color)))) 
-    if (!listOfMovesTheorem3Rating.isEmpty) {
-      1000
-    } else {
-        
-      /**
-       * teste, mit welchem Zug der Computer am meisten Material gewinnt
-       */
-      var list1 = ((x:List[(Double,Move)]) => (x.takeWhile(_._1==x.head._1)))(moves.map(computer.mapMoveToPositions).map(mapValuesOfPieces).sortWith(_._1>_._1).toList)
-      var listOfMovesTheorem1 = list1.map(z => z._1).toList.head * 10
-      /**
-       * teste, mit welchem Zug der Computer die meisten Zugmöglichkeiten erhält
-       */
-      var list2 = ((x:List[(Double,Move)]) => (x.takeWhile(_._1==x.head._1)))(moves.map(computer.mapMoveToPositions).map(x => (computer.countNumberofPossibleMoves(x._1,color),x._2)).sortWith(_._1>_._1).toList)
-      var listOfMovesTheorem2 = list2.map(z => z._1).toList.head   
-      (listOfMovesTheorem1 + listOfMovesTheorem2).toInt
-    }
-  }
+//  def calculateBestMoveNhelper(stellung: List[mytypeNXYC], color: Color, originalColor: Color, tiefe:Int, originalStellung:List[mytypeNXYC], originalMove:Move ) : List[(Double,Move)] = {
+//    var computer = new ChessComputerMoveCalculator(stellung,color)
+//    if (tiefe == 0) {
+//      List.apply((rate(stellung, color), originalMove))
+//    }  else {
+//      var moves = computer.calculateChessFreeMoves
+////      calculateBestMoveNhelper(computer.createImaginaryStellung(stellung, x, color), color, originalColor, tiefe-1, originalStellung, originalMove)
+//    }
+//  }
+//  
+//  def rate(stellung: List[mytypeNXYC], color: Color): Int = {
+//    var moves = calculateBestMove(stellung,color)
+//    var computer = new ChessComputerMoveCalculator(stellung, color)
+//    var listOfMovesTheorem3Rating = (moves.map(computer.mapMoveToPositions).filter(x => positionIstMatt(x._1, computer.oppositecolor(color)))) 
+//    if (!listOfMovesTheorem3Rating.isEmpty) {
+//      1000
+//    } else {
+//        
+//      /**
+//       * teste, mit welchem Zug der Computer am meisten Material gewinnt
+//       */
+//      var list1 = ((x:List[(Double,Move)]) => (x.takeWhile(_._1==x.head._1)))(moves.map(computer.mapMoveToPositions).map(mapValuesOfPieces).sortWith(_._1>_._1).toList)
+//      var listOfMovesTheorem1 = list1.map(z => z._1).toList.head * 10
+//      /**
+//       * teste, mit welchem Zug der Computer die meisten Zugmöglichkeiten erhält
+//       */
+//      var list2 = ((x:List[(Double,Move)]) => (x.takeWhile(_._1==x.head._1)))(moves.map(computer.mapMoveToPositions).map(x => (computer.countNumberofPossibleMoves(x._1,color),x._2)).sortWith(_._1>_._1).toList)
+//      var listOfMovesTheorem2 = list2.map(z => z._1).toList.head   
+//      (listOfMovesTheorem1 + listOfMovesTheorem2).toInt
+//    }
+//  }
   
   def positionIstMatt(stellung: List[mytypeNXYC],color: Color) : Boolean = {
     var computer = new ChessComputerMoveCalculator (stellung,color)
